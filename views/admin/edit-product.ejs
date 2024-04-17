@@ -1,0 +1,31 @@
+<%- include('../includes/head.ejs')%>
+<body>
+    <%- include('../includes/navigation.ejs')%>
+
+
+    <main>
+        <form class="product-form" action="/<% if(editing){ %>edit-product <% }else{ %>add-product <% } %>" method="POST">
+            <div class="form-control">
+                <label for="title">title</label>
+                <input type="text" name="title" id="title" value="<% if(editing){ %><%= product.title %><% } %>">
+            </div>
+            <div class="form-control">
+                <label for="imageurl">Image URL</label>
+                <input type="text" name="imgurl" id="imgurl" value="<% if(editing){ %><%= product.imgurl %><% } %>">
+            </div>
+            <div class="form-control">
+                <label for="price">Price</label>
+                <input type="number" name="price" id="price" step="0.01" value="<% if(editing){ %><%= product.price %><% } %>">
+            </div>
+            <div class="form-control">
+                <label for="des">description</label>
+                <textarea rows="5" name="des" id="des"><% if(editing){ %><%= product.des %><% } %></textarea>
+            </div>
+            <input type="hidden" name="_csrf"  value="<%= csrfToken %>">
+            <% if(editing){ %>
+                <input type="hidden" value="<%= product._id %>" name="productId">
+            <% } %>
+            <button class="btn" type="submit"><% if(editing) { %>Update product <%}else{%>add product<% } %></button>
+        </form>
+    </main>
+    <%- include('../includes/end.ejs')%>

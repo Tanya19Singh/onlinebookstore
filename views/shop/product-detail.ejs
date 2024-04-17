@@ -1,0 +1,26 @@
+<%- include('../includes/head.ejs')%>
+<body>
+    <%- include('../includes/navigation.ejs')%>
+
+
+    <main class="centered">
+        <h1 class="product_title"><%= product.title %></h1>
+        <hr>
+        <div class="product-item">
+            <img src="<%= product.imgurl %>" alt="<%= product.title %>">
+
+        </div>
+        <h2 class="product_price"><%=product.price %></h2>
+        <p class="product_des"><%= product.des %></p>
+        <div class="card-actions">
+            <% if(isAuthenticated){ %>
+            <form class="addtocart" action="/cart" method="post">
+                <input type="hidden" name="_csrf"  value="<%= csrfToken %>">
+                <button class="btn">Add to cart</button>
+                <input type="hidden" name="productId" value="<%= product.id %>">
+            </form>
+            <% } %>
+        </div>
+    </main>
+
+    <%- include('../includes/end.ejs')%>

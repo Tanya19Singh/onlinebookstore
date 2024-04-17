@@ -1,0 +1,41 @@
+<%- include('../includes/head.ejs')%>
+<body>
+    <%- include('../includes/navigation.ejs')%>
+
+
+    <main>
+        <% if(prods.length>0) {%>
+            <div class="grid">
+                <% for(let product of prods) {%>
+                    <article class="card product-item">
+                        <div class="card-header">
+                            <h1 class="product-title"><%=product.title%></h1>
+                        </div>
+                        <div class="card-img">
+                            <img src=<%= product.imgurl%> alt="my book">
+                        </div>
+                        <div class="card-content">
+                            <h2 class="product-price">Rs.<%= product.price%></h2>
+                            <p class="product-des"><%= product.des%></p>
+                        </div>
+                        <div class="card-actions">
+                            <a href="/products/<%= product._id %>" class="btn">Detalis</a>
+                            <% if(isAuthenticated){ %>
+                            <form class="addtocart" action="/cart" method="post">
+                                <input type="hidden" name="_csrf"  value="<%= csrfToken %>">
+                                <button class="btn">Add to cart</button>
+                                <input type="hidden" name="productId" value="<%= product._id %>">
+                            </form>
+                            <%} %>
+                    
+                        </div>
+                    </article>
+                <%}%>
+            </div>
+        <% }else{%>
+            <h1>no products found</h1>
+        <% }%>
+        
+    </main>
+
+    <%- include('../includes/end.ejs')%>

@@ -39,7 +39,7 @@ const authRoutes=require('./routes/auth');
 
 app.use(bodyparser.urlencoded({extended: false}));
 app.use(express.static(path.join(__dirname,'public')));//requied in order to link css file to html files as direct access does not work in express...here it grants read access  to public folder so  user can access public path
-app.use(session({secret:'my secret',resave:false, saveUninitialized:false,store: store, cookie:{secure: true}}));//session middleware...automatically sets the  cookie
+app.use(session({secret:'my secret',resave:false, saveUninitialized:false,store: store}));//session middleware...automatically sets the  cookie
 app.use(csrfProtection);
 // app.use(flash);
 

@@ -19,7 +19,7 @@
             <% } else {%>
                 <form action="/logout" method="POST">
                     <input type="hidden" name="_csrf"  value="<%= csrfToken %>">
-                    <li class="main-header-item"><button type="submit">logout</button></li>
+                    <button class="logoutbtn" type="submit">logout</button>
                 </form>
             <% }%>
 

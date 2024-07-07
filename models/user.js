@@ -13,13 +13,16 @@ const userSchema=new Schema({
         required:true
     },
     cart:{
-        items:[{productId:{type: Schema.Types.ObjectId, ref: 'Product',required:true}, quantity:{type:Number, required:true}}]
+        items:[{productId:{type: String,required:true}, quantity:{type:Number, required:true}}]
+    },
+    checkout:{
+        items:[{productId:{type: String,required:true}}]
     }
 })
 
 userSchema.methods.addToCart=function(product){
             const cartProductIndex=this.cart.items.findIndex(cp=>{
-            return cp.productId.toString()===product._id.toString();
+            return cp.productId===product;
         })
         let newQuantity=1;
         const UpdatedCartItems=[...this.cart.items];
@@ -30,7 +33,7 @@ userSchema.methods.addToCart=function(product){
             UpdatedCartItems[cartProductIndex].quantity=newQuantity;
         }
         else{
-            UpdatedCartItems.push({productId: product._id,quantity:newQuantity})
+            UpdatedCartItems.push({productId: product,quantity:newQuantity})
         }
         const updatedCart = {
             items: UpdatedCartItems
@@ -43,9 +46,37 @@ userSchema.methods.addToCart=function(product){
 
 userSchema.methods.removeFromCart=function(productId){
     const updatedCartItems=this.cart.items.filter(item=>{
-        return item.productId.toString()!==productId.toString();
+        return item.productId!==productId;
     })
     this.cart.items=updatedCartItems;
+    return this.save();
+
+}
+userSchema.methods.addToCheckout=function(product){
+            const checkoutProductIndex=this.checkout.items.findIndex(cp=>{
+            return cp.productId===product;
+        })
+        const UpdatedCheckoutItems=[...this.checkout.items];
+
+        if(checkoutProductIndex<0)
+        {
+            UpdatedCheckoutItems.push({productId: product})
+        }
+        console.log(UpdatedCheckoutItems);
+        const updatedCheckout = {
+            items: UpdatedCheckoutItems
+        }
+       this.checkout=updatedCheckout;
+        return this.save();
+
+
+}
+
+userSchema.methods.removeFromCheckout=function(productId){
+    const updatedCheckoutItems=this.checkout.items.filter(item=>{
+        return item.productId!==productId;
+    })
+    this.checkout.items=updatedCheckoutItems;
     return this.save();
 
 }

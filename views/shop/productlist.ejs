@@ -4,38 +4,72 @@
 
 
     <main>
-        <% if(prods.length>0) {%>
-            <div class="grid">
-                <% for(let product of prods) {%>
-                    <article class="card product-item">
-                        <div class="card-header">
-                            <h1 class="product-title"><%=product.title%></h1>
-                        </div>
-                        <div class="card-img">
-                            <img src=<%= product.imgurl%> alt="my book">
-                        </div>
-                        <div class="card-content">
-                            <h2 class="product-price">Rs.<%= product.price%></h2>
-                            <p class="product-des"><%= product.des%></p>
-                        </div>
-                        <div class="card-actions">
-                            <a href="/products/<%= product._id %>" class="btn">Detalis</a>
-                            <% if(isAuthenticated){ %>
-                            <form class="addtocart" action="/cart" method="post">
-                                <input type="hidden" name="_csrf"  value="<%= csrfToken %>">
-                                <button class="btn">Add to cart</button>
-                                <input type="hidden" name="productId" value="<%= product._id %>">
-                            </form>
-                            <%} %>
-                    
-                        </div>
-                    </article>
+        
+        <h1 class="sec">FICTION</h1>
+            <div class="wrapper">
+                <% for(let products of prods1) {%>
+                    <div class="grid">
+                        <div class="grid__item">
+                          <div class="card"><img class="card__img" src="http://books.google.com/books/content?id=<%=products.id%>&printsec=frontcover&img=1&zoom=6&edge=curl&source=gbs_api" alt="<%= products.volumeInfo.title %>" >
+                            <div class="card__content">
+                              <h1 class="card__header"><%=products.volumeInfo.title%></h1>
+                              <p class="card__text"><%=products.volumeInfo.description%></p>
+                              <a href="/products/<%= products.id %>"><button class="card__btn">Explore</button></a>
+                            </div>
+                          </div>
+                        </div> 
+                        </div> 
                 <%}%>
             </div>
-        <% }else{%>
-            <h1>no products found</h1>
-        <% }%>
-        
+        <h1 class="sec">GEOPOLITICS</h1>
+            <div class="wrapper">
+                <% for(let products of prods2) {%>
+                    <div class="grid">
+                        <div class="grid__item">
+                          <div class="card"><img class="card__img" src="http://books.google.com/books/content?id=<%=products.id%>&printsec=frontcover&img=1&zoom=6&edge=curl&source=gbs_api" alt="<%= products.volumeInfo.title %>" >
+                            <div class="card__content">
+                              <h1 class="card__header"><%=products.volumeInfo.title%></h1>
+                              <p class="card__text"><%=products.volumeInfo.description%></p>
+                              <a href="/products/<%= products.id %>"><button class="card__btn">Explore</button></a>
+                            </div>
+                          </div>
+                        </div> 
+                        </div> 
+                <%}%>
+            </div>
+        <h1 class="sec">NOVELS</h1>
+            <div class="wrapper">
+                <% for(let products of prods3) {%>
+                    <div class="grid">
+                        <div class="grid__item">
+                          <div class="card"><img class="card__img" src="http://books.google.com/books/content?id=<%=products.id%>&printsec=frontcover&img=1&zoom=6&edge=curl&source=gbs_api" alt="<%= products.volumeInfo.title %>" >
+                            <div class="card__content">
+                              <h1 class="card__header"><%=products.volumeInfo.title%></h1>
+                              <p class="card__text"><%=products.volumeInfo.description%></p>
+                              <a href="/products/<%= products.id %>"><button class="card__btn">Explore</button></a>
+                            </div>
+                          </div>
+                        </div> 
+                        </div> 
+                <%}%>
+            </div>
+        <h1 class="sec">POETRTY</h1>
+            <div class="wrapper">
+                <% for(let products of prods4) {%>
+                    <div class="grid">
+                        <div class="grid__item">
+                          <div class="card"><img class="card__img" src="http://books.google.com/books/content?id=<%=products.id%>&printsec=frontcover&img=1&zoom=6&edge=curl&source=gbs_api" alt="<%= products.volumeInfo.title %>" >
+                            <div class="card__content">
+                              <h1 class="card__header"><%=products.volumeInfo.title%></h1>
+                              <p class="card__text"><%=products.volumeInfo.description%></p>
+                              <a href="/products/<%= products.id %>"><button class="card__btn">Explore</button></a>
+                            </div>
+                          </div>
+                        </div> 
+                        </div> 
+                <%}%>
+            </div>
+            
     </main>
 
     <%- include('../includes/end.ejs')%>

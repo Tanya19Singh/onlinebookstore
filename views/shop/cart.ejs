@@ -9,9 +9,9 @@
                     <% products.forEach(p =>{ %>
                         
                             <li class="list_item">
-                                <p><%= p.productId.title %>(<%= p.quantity %>)</p>
+                                <p><%= p.bookdata.volumeInfo.title %>(<%= p.quantity %>)</p>
                                     <form  action="/cart-delete-item" method="post">
-                                        <input type="hidden" value="<%= p.productId._id %>" name="productId">
+                                        <input type="hidden" value="<%=  p.bookdata.id %>" name="productId">
                                         <input type="hidden" name="_csrf"  value="<%= csrfToken %>">
                                         <button class="btn" type="submit">DELETE</button>
                                     </form>

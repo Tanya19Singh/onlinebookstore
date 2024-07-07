@@ -1,27 +1,51 @@
 // const Order = require('../models/order');
 const Product=require('../models/product');//importing the class
 const Order=require('../models/order');
+const axios=require('axios');
 
-exports.getproducts=(req,res,next)=>{
-     Product.find()//gives all products automatically
-     .then((products)=>{
-        res.render('shop/productlist',{
-            prods:products,
-            doctitle:'all products',
-            path:'/products',
-            isAuthenticated:req.session.isLoggedIn
+exports.getproducts=async(req,res,next)=>{
+    
+  const res1=await axios.get('https://www.googleapis.com/books/v1/volumes?q=subject:fiction&key=AIzaSyBnYQWPPX_n381uO10ZXqfmy_yEksReI48');
+  const res2=await axios.get('https://www.googleapis.com/books/v1/volumes?q=subject:geopolitics&key=AIzaSyBnYQWPPX_n381uO10ZXqfmy_yEksReI48');
+  const res3=await axios.get('https://www.googleapis.com/books/v1/volumes?q=subject:novel&orderBy=newest&key=AIzaSyBnYQWPPX_n381uO10ZXqfmy_yEksReI48');
+  const res4=await axios.get('https://www.googleapis.com/books/v1/volumes?q=subject:poetry&key=AIzaSyBnYQWPPX_n381uO10ZXqfmy_yEksReI48');
+  const prod1=res1.data.items;
+  const prod2=res2.data.items;
+  const prod3=res3.data.items;
+  const prod4=res4.data.items;
+
+    console.log(prod1);
+         res.render('shop/productlist',{
+            prods1:prod1,
+            prods2:prod2,
+            prods3:prod3,
+            prods4:prod4,
+            doctitle:'shop',
+            path:'/',
+            isAuthenticated:req.session.isLoggedIn,
         })
 
-    }).catch(err => console.log(err));
+    }
+     
 
-}
+
 exports.getproduct=(req,res,next)=>{
     const prodId=req.params.productId;
-    Product.findById(prodId)//here findById is method provided by mongoose
-    .then(product=>{//receiving product array(although of only 1 product) through sql querry
-        res.render('shop/product-detail',{product:product,doctitle:product.title,path:'/products', isAuthenticated:req.session.isLoggedIn})    
+
+    axios.get('https://www.googleapis.com/books/v1/volumes/'+prodId+'?key=AIzaSyBnYQWPPX_n381uO10ZXqfmy_yEksReI48')
+    .then(result=> {
+        const book=result.data;
+        console.log(book);
+         res.render('shop/product-detail',{
+            product:book,
+            doctitle:book.volumeInfo.title,
+            path:'/products',
+            isAuthenticated:req.session.isLoggedIn,
+        })
+
     })
-    .catch(err=>console.log(err));
+    .catch(err=>console.log(err))
+    
 }
 exports.getindex=(req,res,next)=>{
     //-------callback approach when file was used to store the data-----
@@ -39,33 +63,58 @@ exports.getindex=(req,res,next)=>{
 
     // }).catch(err => console.log(err));
 console.log(req.session.isLoggedIn);
-    Product.find().then(products=>{
+const books=[];
         res.render('shop/index',{
-            prods:products,
+            prods:books,
             doctitle:'shop',
             path:'/',
-            
+            isAuthenticated:req.session.isLoggedIn        })
+}
+
+exports.postindex=(req,res,next)=>{
+    console.log(req.session.isLoggedIn);
+
+   const search=req.body.bookName;
+   console.log(search);
+    axios.get('https://www.googleapis.com/books/v1/volumes?q='+search+'&key=AIzaSyBnYQWPPX_n381uO10ZXqfmy_yEksReI48')
+    .then(result=> {
+        const books=result.data.items;
+        console.log(books);
+        return res.render('shop/index',{
+            prods:books,
+            doctitle:'shop',
+            path:'/',
+            isAuthenticated:req.session.isLoggedIn,
         })
-    }).catch(err=>{console.log(err);});
+
+    })
+    .catch(err=>console.log(err))
+
 }
 
 exports.postorder=(req,res,next)=>{
-
-    req.user
-        .populate('cart.items.productId')
-        .then(user=>{
-            const products=user.cart.items.map(i=>{
-                return {quantity: i.quantity, productData:{...i.productId._doc}};//.doc accesses all the metadata stored with productId 
-            });
-            const order=new Order({
-                user:{
-                    email:req.user.email,
-                    userId: req.user
-                },
-                products: products
-            });
-           return order.save();
-        })
+    const products=req.user.cart.items;
+        const data=[];
+        Promise.all(products.map(product => {
+            const prodId = product.productId;
+            return axios.get('https://www.googleapis.com/books/v1/volumes/' + prodId + '?key=AIzaSyBnYQWPPX_n381uO10ZXqfmy_yEksReI48')
+                .then(result => {
+                    data.push({ productData: result.data.volumeInfo.title, quantity: product.quantity });
+                })
+                .catch(err => {
+                    console.log(err);
+                });
+        }))
+    .then(()=>{
+                const order=new Order({
+                    user:{
+                        email:req.user.email,
+                        userId: req.user
+                    },
+                    products: data
+                });
+                return order.save();
+            })
         .then(result=>{
             return req.user.clearCart();
         })
@@ -105,6 +154,7 @@ exports.getOrders=(req,res,next)=>{
                 orders:orders,
                 isAuthenticated:req.session.isLoggedIn});
 
+       
         })
         .catch(err=>{
             console.log(err);
@@ -129,31 +179,61 @@ exports.getcart=(req,res,next)=>{
     //         })
     //     })
     // })
-    req.user.populate('cart.items.productId')
-    // .execPopulate()//populate does not return a promiseb
-    .then(user=>{
-        console.log(user);
-        const products=user.cart.items;
-            res.render('shop/cart',{
+    // req.user.populate('cart.items.productId')
+    // // .execPopulate()//populate does not return a promiseb
+    // .then(user=>{
+    //     console.log(user);
+        const products=req.user.cart.items;
+        const data=[];
+        Promise.all(products.map(product => {
+            const prodId = product.productId;
+            return axios.get('https://www.googleapis.com/books/v1/volumes/' + prodId + '?key=AIzaSyBnYQWPPX_n381uO10ZXqfmy_yEksReI48')
+                .then(result => {
+                    data.push({ bookdata: result.data, quantity: product.quantity });
+                })
+                .catch(err => {
+                    console.log(err);
+                });
+        })).then(() => {
+            // Now that all data is fetched, render the page
+            res.render('shop/cart', {
                 path: '/cart',
                 doctitle: 'your cart',
-                products: products
-            
+                products: data,
+                isAuthenticated: req.session.isLoggedIn
             });
+        });
+    //     for(let product of products)
+    //     {const prodId=product.productId;
+    //         axios.get('https://www.googleapis.com/books/v1/volumes/'+prodId+'?key=AIzaSyBnYQWPPX_n381uO10ZXqfmy_yEksReI48')
+    // .then(result=> {
         
-    })
-    .catch(err=>console.log(err));
+    //      console.log(result.data);
+    //      console.log(product.quantity);
+    //         data.push({bookdata:result.data,quantity:product.quantity});
+    //     })
+    //     .catch(err=>{
+    //         console.log(err);
+    //     })        
+    // }
+    // res.render('shop/cart',{
+    //     path: '/cart',
+    //     doctitle: 'your cart',
+    //     products:data,
+    //     isAuthenticated:req.session.isLoggedIn
+    
+    // });
+// }
+// )
+//     .catch(err=>console.log(err));
 }
 
 exports.postcart=(req,res,next)=>{
     const prodId=req.body.productId;
-    let fetchedCart;
-    let newQuantity=1;
-
-    Product.findById(prodId).then(product=>{
-        console.log(product);
-        return req.user.addToCart(product);
-    })
+    
+    
+    
+    req.user.addToCart(prodId)
     .then(result=>{
         res.redirect('/cart');
 
@@ -204,8 +284,61 @@ exports.postcartdeleteproduct=(req,res,next)=>{
    
 }
 exports.getcheckout=(req,res,next)=>{
-    res.render('shop/checkout',{doctitle: 'your checkout',path:'/checkout', isAuthenticated:req.session.isLoggedIn});
+   
+    const products=req.user.checkout.items;
+        const data=[];
+        Promise.all(products.map(product => {
+            const prodId = product.productId;
+            return axios.get('https://www.googleapis.com/books/v1/volumes/' + prodId + '?key=AIzaSyBnYQWPPX_n381uO10ZXqfmy_yEksReI48')
+                .then(result => {
+                    data.push( result.data);
+                })
+                .catch(err => {
+                    console.log(err);
+                });
+        })).then(() => {
+            // Now that all data is fetched, render the page
+            res.render('shop/checkout', {
+                path: '/checkout',
+                doctitle: 'your checkout',
+                prods: data,
+                isAuthenticated: req.session.isLoggedIn
+            });
+        });
     
-    // res.sendFile(path.join(rootdir,'views','shop.html'));
 }
+
+exports.postcheckout=(req,res,next)=>{
+    const prodId=req.body.productId;
+    
+    
+    
+    req.user.addToCheckout(prodId)
+    .then(result=>{
+        res.redirect('/checkout');
+
+    })
+    .catch(err=>{
+        console.log(err);
+    });
+    
+}
+
+exports.postcheckoutdeleteproduct=(req,res,next)=>{
+    const prodId=req.body.productId;
+    req.user.removeFromCheckout(prodId)
+    .then(result=>{
+        res.redirect('/checkout');
+    })
+    .catch(err=>{
+        console.log(err);
+    })
+    
+   
+}
+// exports.getcheckout=(req,res,next)=>{
+//     res.render('shop/checkout',{doctitle: 'your checkout',path:'/checkout', isAuthenticated:req.session.isLoggedIn});
+    
+//     // res.sendFile(path.join(rootdir,'views','shop.html'));
+// }
 

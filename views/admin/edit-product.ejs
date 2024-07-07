@@ -4,20 +4,23 @@
 
 
     <main>
-        <form class="product-form" action="/<% if(editing){ %>edit-product <% }else{ %>add-product <% } %>" method="POST">
-            <div class="form-control">
+        <% if(errorMessage){%>
+            <button><%=errorMessage%></button>
+        <%} %>
+        <form class="product_form" action="/<% if(editing){ %>edit-product <% }else{ %>add-product <% } %>" method="POST" enctype="multipart/form-data">
+            <div class="form_control">
                 <label for="title">title</label>
                 <input type="text" name="title" id="title" value="<% if(editing){ %><%= product.title %><% } %>">
             </div>
-            <div class="form-control">
-                <label for="imageurl">Image URL</label>
-                <input type="text" name="imgurl" id="imgurl" value="<% if(editing){ %><%= product.imgurl %><% } %>">
+            <div class="form_control">
+                <label for="image">Image</label>
+                <input  type="file" name="image" id="image">
             </div>
-            <div class="form-control">
+            <div class="form_control">
                 <label for="price">Price</label>
                 <input type="number" name="price" id="price" step="0.01" value="<% if(editing){ %><%= product.price %><% } %>">
             </div>
-            <div class="form-control">
+            <div class="form_control">
                 <label for="des">description</label>
                 <textarea rows="5" name="des" id="des"><% if(editing){ %><%= product.des %><% } %></textarea>
             </div>

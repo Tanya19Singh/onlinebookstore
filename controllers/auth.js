@@ -1,18 +1,12 @@
 const User=require('../models/user');
 const nodemailer=require('nodemailer');
 const bcrypt=require('bcryptjs');
-const transporter = nodemailer.createTransport({
-    host: 'smtp.ethereal.email',
-    port: 587,
-    auth: {
-        user: 'matilde24@ethereal.email',
-        pass: 'VztcuhzK8pDfT1WHYJ'
-    }
-});
+require ('dotenv').config();
+const notifier=require('node-notifier');
 exports.getLogin=(req,res,next)=>{
     // const isLoggedIn=req.get('Cookie')[0].trim().split('=')[1]=='true';//not recommended as cookie value can be altered by anyone at  client side
     
-    
+            
             res.render('auth/login',{
                 doctitle: 'login',
                 path:'/login',
@@ -43,6 +37,7 @@ exports.postSignup=(req,res,next)=>{
     User.findOne({email:email})
     .then(userDoc=>{
         if(userDoc){
+
             return res.redirect('/signup');
         }
         return bcrypt.hash(password,12)
@@ -61,9 +56,9 @@ exports.postSignup=(req,res,next)=>{
 
         return transporter.sendMail({
             to:email,
-            from:'shop@gmail.com',
+            from:'ts12191234@gmail.com',
             subject:'signup succeeded',
-            html:'<h1>You successfully signed up!</h1>'
+            text:'You successfully signed up!'
         })
     })
     .catch(err=>{
@@ -77,8 +72,8 @@ exports.postLogin=(req,res,next)=>{
     User.findOne({email:email})
     .then(user=>{
         if(!user){
-            // req.flash("error","Invalid email or password");
-            return res.redirect('/login');
+            return res.json({error:'invalid email or password'})
+            // return res.redirect('/login');
         }
         bcrypt
         .compare(password,user.password)//returns a boolean value to then block either true or false
@@ -91,7 +86,6 @@ exports.postLogin=(req,res,next)=>{
                     res.redirect('/');
                 });
             }
-            // req.flash("error","Invalid email or password");
             res.redirect('/login');
         })
         .catch(err=>{

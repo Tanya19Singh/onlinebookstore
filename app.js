@@ -1,6 +1,5 @@
 const http=require('http');
 const bodyparser=require('body-parser');
-
 const express=require('express');
 const path=require("path");
 const mongoose=require('mongoose');
@@ -8,7 +7,7 @@ const session=require('express-session');
 const MongoDbStore=require('connect-mongodb-session')(session);
 const csrf=require('csurf');
 const flash=require('connect-flash');
-// const expresshbs=require('express-handlebars');
+const multer=require('multer');
 
 const MONGODB_URI='mongodb+srv://ts12191234:Tanscloud@cluster0.m9h5wp3.mongodb.net/shop';
 
@@ -36,12 +35,30 @@ const authRoutes=require('./routes/auth');
 // }).catch((err)=>{
 // console.log(err);
 // });//on every execution of a querry, a promise is sent n promise has two fuctions then() and catch()
-
+const fileStorage=multer.diskStorage({
+  destination:function(req,file,cb){
+    cb(null,'images');
+  },
+  filename:function(req,file,cb){
+    cb(null,new Date().toISOString().replace(/:/g,'-')+'-'+file.originalname);
+  }
+})
+const fileFilter=(req,file,cb)=>{
+  if(file.mimetype==='image/png'||file.mimetype==='image/jpg'||file.mimetype==='image/jpeg')
+    {
+      cb(null,true);
+    }
+  else{
+    cb(null,false);
+  }
+};
 app.use(bodyparser.urlencoded({extended: false}));
+app.use(multer({storage:fileStorage, fileFilter:fileFilter}).single('image'));
 app.use(express.static(path.join(__dirname,'public')));//requied in order to link css file to html files as direct access does not work in express...here it grants read access  to public folder so  user can access public path
+app.use('/images', express.static(path.join(__dirname,'images')));
 app.use(session({secret:'my secret',resave:false, saveUninitialized:false,store: store}));//session middleware...automatically sets the  cookie
 app.use(csrfProtection);
-// app.use(flash);
+app.use(flash());
 
 app.use((req, res, next) => {
     if (!req.session.user) {

@@ -1,14 +1,15 @@
+const { ValidationError } = require('sequelize');
 const Product = require('../models/product');//importing the class
 
 
 exports.getaddproduct = (req, res, next) => {
   // res.sendFile(path.join(rootdir,'views','add-product.html'));
-  res.render('admin/edit-product', { doctitle: 'add-product', path: '/add-product',editing:false });
+  res.render('admin/edit-product', { doctitle: 'add-product', path: '/add-product',editing:false, errorMessage:0 });
 }
 
 exports.postaddproduct = (req, res, next) => {
   const title = req.body.title;
-  const imgurl = req.body.imgurl;
+  const image = req.file;
   const price = req.body.price;
   const des = req.body.des;
   // const product = new Product(null,title, imgurl, price, des);
@@ -16,7 +17,24 @@ exports.postaddproduct = (req, res, next) => {
   //   res.redirect('/');
   // })
   // .catch(err=>console.log(err));
-
+  console.log(image);
+if(!image)
+  {
+    return res.status(422).render('admin/edit-product',{
+      doctitle: 'add-product',
+      path: '/add-product',
+      editing:false,
+      hasError:true,
+      product:{
+        title:title,
+        price:price,
+        des:des
+      },
+      errorMessage:"attached file is not image",
+      ValidationError:[]
+    })
+  }
+  const imgurl=image.path;
   const product=new Product({title:title, price:price, des:des , imgurl:imgurl, userId:req.user});
   product
     .save()//mongoose automatically  saves the data in databse
@@ -47,7 +65,7 @@ exports.geteditproduct = (req, res, next) => {
   .then(product=>{
     if(!product)
       return res.redirect('/');
-    res.render('admin/edit-product', { doctitle: 'add-product', path: '/edit-product', editing: editMode, product:product });
+    res.render('admin/edit-product', { doctitle: 'add-product', path: '/edit-product', editing: editMode, product:product ,errorMessage:''});
 
   }).catch(err=>{console.log(err)});
 }
@@ -56,16 +74,19 @@ exports.posteditproduct=(req,res,next)=>{
     const prodId=req.body.productId;
     const updatedtitle=req.body.title;
     const updatedprice=req.body.price;
-    const updatedimgurl=req.body.imgurl;
+    const image=req.file;
     const updateddes=req.body.des;
     // const updatedproduct=new Product(prodId,updatedtitle,updatedimgurl,updatedprice,updateddes);
     // updatedproduct.save();
+
 Product.findById(prodId).then(product=>{
   product.title=updatedtitle;
   product.price=updatedprice;
   product.des=updateddes;
-  product.imgurl=updatedimgurl;
-
+  if(image)
+    {
+      product.imgurl=image.path;
+    }
   return product.save();//mongoose automatically saves the changes made
 })  
     .then(result=>{

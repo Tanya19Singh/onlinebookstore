@@ -4,7 +4,7 @@ const Schema=mongoose.Schema;
 
 const orderSchema=new Schema({
     products:[{
-        productData:{ type:Object, required:true},
+        productData:{ type: String, required:true},
         quantity:{type:Number, required:true}
     }],
     user:{

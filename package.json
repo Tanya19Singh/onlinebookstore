@@ -13,6 +13,7 @@
     "nodemon": "^3.0.3"
   },
   "dependencies": {
+    "@google/generative-ai": "^0.21.0",
     "alert": "^6.0.1",
     "axios": "^1.7.2",
     "bcryptjs": "^2.4.3",

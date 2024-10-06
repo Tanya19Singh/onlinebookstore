@@ -4,13 +4,18 @@
 
 
     <main class="centered">
+        <%       
+            function stripHTML(htmlContent) {
+                return htmlContent ? htmlContent.replace(/<\/?[^>]+(>|$)/g, "") : "";
+              }
+        %>
         <h1 class="product_title"><%= product.volumeInfo.title %></h1>
         <hr>
         <div class="product-item">
         <img src="http://books.google.com/books/content?id=<%=product.id%>&printsec=frontcover&img=1&zoom=6&edge=curl&source=gbs_api" alt="<%= product.volumeInfo.title %>">                        
         </div>
         <h2 class="product_price">Price: Rs.<%= Math.floor(Math.random()*((1000-100)+100))%></h2>
-        <p class="product_des"><%=product.volumeInfo.description%></p>
+        <p class="product_des"><%=stripHTML(product.volumeInfo.description) %></p>
         <div class="card-actions">
             <% if(isAuthenticated){ %>
 

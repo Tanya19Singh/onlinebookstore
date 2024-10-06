@@ -1,0 +1,87 @@
+<%- include('../includes/head.ejs')%>
+<body>
+    <%- include('../includes/navigation.ejs')%>
+
+
+    <main>
+            
+            <form class="product-form" action="/checkout" method="POST">
+
+                
+                    <!-- <div class="search">
+                        
+                        <input type="search" placeholder=""
+                        name="bookName"
+                        id="bookName"> 
+                        <button type="submit"><i class="fa fa-search"></i></button>
+                    </div> -->
+                    <div class="wrap">
+                        <div class="search">
+                            <input type="hidden" name="_csrf"  value="<%= csrfToken %>">
+                           <input type="text" class="searchTerm" placeholder="enter book name" name="bookName">
+                           <button type="submit" class="searchButton">
+                             <i class="fa fa-search"></i>
+                          </button>
+                        </div>
+                     </div>
+                
+            </form>
+
+            <div class="grid-in">
+                <section class="light">
+                    <div class="container py-2">
+                        <% if(prods.length>0){%>
+                        <div class="h1 text-center text-dark" id="pageHeaderTitle">Search result</div>
+                <% for(let [index,products] of prods.entries()) { if(index%2===0){%>
+                    
+                    
+                            <article class="postcard light blue">
+                                <a class="postcard__img_link" href="#">
+                                    <img class="postcard__img" src="http://books.google.com/books/content?id=<%=products.id%>&printsec=frontcover&img=1&zoom=6&edge=curl&source=gbs_api" alt="<%= products.volumeInfo.title %>" />
+                                </a>
+                                <div class="postcard__text t-dark">
+                                    <h1 class="postcard__title blue"><a href="#"><%=products.volumeInfo.title%></a></h1>
+                                    <div class="postcard__bar"></div>
+                                    <div class="postcard__preview-txt">
+                                        <p><strong>Authors:</strong> 
+                                            <%= products.volumeInfo.authors ? products.volumeInfo.authors.join(', ') : 'Unknown Author' %>
+                                          </p>
+                                          <p><strong>Language:</strong> <%= products.volumeInfo.language || 'Unknown' %></p>
+                                    
+                                    </div>
+                                    <ul class="postcard__tagbox">
+                                        <a href="<%= products.accessInfo.webReaderLink %>"><button class="btn btn-info">Read the book</button></a>
+                                    </ul>
+                                </div>
+                            </article>
+                            <%} else {%>
+                                <article class="postcard light red">
+                                    <a class="postcard__img_link" href="#">
+                                        <img class="postcard__img" src="http://books.google.com/books/content?id=<%=products.id%>&printsec=frontcover&img=1&zoom=6&edge=curl&source=gbs_api" alt="<%= products.volumeInfo.title %>" />
+                                    </a>
+                                    <div class="postcard__text t-dark">
+                                        <h1 class="postcard__title blue"><a href="#"><%=products.volumeInfo.title%></a></h1>
+                                        <div class="postcard__bar"></div>
+                                        <div class="postcard__preview-txt">
+                                            <p><strong>Authors:</strong> 
+                                                <%= products.volumeInfo.authors ? products.volumeInfo.authors.join(', ') : 'Unknown Author' %>
+                                              </p>
+                                              <p><strong>Language:</strong> <%= products.volumeInfo.language || 'Unknown' %></p>
+                                        
+                                        </div>
+                                        <ul class="postcard__tagbox">
+                                            <a href="<%= products.accessInfo.webReaderLink %>"><button class="btn btn-info">Read the book</button></a>
+                                        </ul>
+                                </article>
+                            <%}%>
+                            <%}%>
+                            <%} else{%>
+                                <h2 style="text-align: center;color: rgb(54, 113, 54); animation: fadeIn 4s ease-in-out;" >No such book present for free</h2>
+                            <%}%>
+
+                        </div>
+                    </section>
+                </div>
+    </main>
+
+    <%- include('../includes/end.ejs')%>

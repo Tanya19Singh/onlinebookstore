@@ -1,14 +1,18 @@
-// const Order = require('../models/order');
-const Product=require('../models/product');//importing the class
+const Product=require('../models/product');
 const Order=require('../models/order');
 const axios=require('axios');
+// const { GoogleGenerativeAI } =require ("@google/generative-ai");
+// require ('dotenv').config();
+// const genAI = new GoogleGenerativeAI(process.env.api_key);
+// const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+
 
 exports.getproducts=async(req,res,next)=>{
     
-  const res1=await axios.get('https://www.googleapis.com/books/v1/volumes?q=subject:fiction&key=AIzaSyBnYQWPPX_n381uO10ZXqfmy_yEksReI48');
-  const res2=await axios.get('https://www.googleapis.com/books/v1/volumes?q=subject:geopolitics&key=AIzaSyBnYQWPPX_n381uO10ZXqfmy_yEksReI48');
-  const res3=await axios.get('https://www.googleapis.com/books/v1/volumes?q=subject:novel&orderBy=newest&key=AIzaSyBnYQWPPX_n381uO10ZXqfmy_yEksReI48');
-  const res4=await axios.get('https://www.googleapis.com/books/v1/volumes?q=subject:poetry&key=AIzaSyBnYQWPPX_n381uO10ZXqfmy_yEksReI48');
+  const res1=await axios.get('https://www.googleapis.com/books/v1/volumes?q=subject:fiction&orderBy=newest&key=AIzaSyBnYQWPPX_n381uO10ZXqfmy_yEksReI48');
+  const res2=await axios.get('https://www.googleapis.com/books/v1/volumes?q=subject:geopolitics&orderBy=newest&key=AIzaSyBnYQWPPX_n381uO10ZXqfmy_yEksReI48');
+  const res3=await axios.get('https://www.googleapis.com/books/v1/volumes?q=subject:novel&orderBy=newest&orderBy=newest&key=AIzaSyBnYQWPPX_n381uO10ZXqfmy_yEksReI48');
+  const res4=await axios.get('https://www.googleapis.com/books/v1/volumes?q=subject:poetry&orderBy=newest&key=AIzaSyBnYQWPPX_n381uO10ZXqfmy_yEksReI48');
   const prod1=res1.data.items;
   const prod2=res2.data.items;
   const prod3=res3.data.items;
@@ -21,7 +25,7 @@ exports.getproducts=async(req,res,next)=>{
             prods3:prod3,
             prods4:prod4,
             doctitle:'shop',
-            path:'/',
+            path:'/products',
             isAuthenticated:req.session.isLoggedIn,
         })
 
@@ -48,27 +52,20 @@ exports.getproduct=(req,res,next)=>{
     
 }
 exports.getindex=(req,res,next)=>{
-    //-------callback approach when file was used to store the data-----
-    //  Product.fetchAll(products=>{
-    // res.render('shop/index',{prods:products,doctitle: 'shop',path:'/',hasproducts: products.length>0, activeshop:true, productsCSS:true});
-    // });
-    // -----------sql method---------
-    // Product.fetchAll()
-    // .then(([rows,fielddata])=>{
-    //     res.render('shop/index',{
-    //         prods:rows,
-    //         doctitle:'shop',
-    //         path:'/'
-    //     })
-
-    // }).catch(err => console.log(err));
 console.log(req.session.isLoggedIn);
-const books=[];
+axios.get('https://www.googleapis.com/books/v1/volumes?q=flowers&key=AIzaSyBnYQWPPX_n381uO10ZXqfmy_yEksReI48')
+    .then(result=> {
+        const books=result.data.items;
+        console.log(books);
         res.render('shop/index',{
             prods:books,
             doctitle:'shop',
             path:'/',
-            isAuthenticated:req.session.isLoggedIn        })
+            isAuthenticated:req.session.isLoggedIn        
+        })
+       
+})
+.catch(err=>console.log(err))
 }
 
 exports.postindex=(req,res,next)=>{
@@ -76,10 +73,10 @@ exports.postindex=(req,res,next)=>{
 
    const search=req.body.bookName;
    console.log(search);
-    axios.get('https://www.googleapis.com/books/v1/volumes?q='+search+'&key=AIzaSyBnYQWPPX_n381uO10ZXqfmy_yEksReI48')
+    axios.get('https://www.googleapis.com/books/v1/volumes?q='+search+'&orderBy=newest&key=AIzaSyBnYQWPPX_n381uO10ZXqfmy_yEksReI48')
     .then(result=> {
         const books=result.data.items;
-        console.log(books);
+        // console.log(books);
         return res.render('shop/index',{
             prods:books,
             doctitle:'shop',
@@ -92,6 +89,39 @@ exports.postindex=(req,res,next)=>{
 
 }
 
+// // In your Node.js file
+// exports.postrecommender = async (req, res, next) => {
+//     console.log(req.session.isLoggedIn);
+  
+//     const genre = req.body.genre;
+//     const language = req.body.lang;
+//     const age = req.body.age;
+//     const prompt = `give me just names of five ${genre} books in ${language} for age group: ${age}`;
+  
+//     try {
+//       const result = await axios({
+//         url: "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=AIzaSyCoAVy5dHxNXeO7Vy34sFEbc7e5MZhjb6Y",
+//         method: "post",
+//         data: {
+//           contents: [
+//             { parts: [{ text: prompt }] },
+//           ],
+//         },
+//       });
+//       console.log(result);
+  
+//       const recommendation = result['data']['candidates'][0]['content']['parts'][0]['text'];
+//       return res.render('shop/index',{
+//         doctitle: 'shop',
+//         recommendation,
+//         path: '/',
+//         isAuthenticated:req.session.isLoggedIn,
+//     })
+//     } catch (error) {
+//       console.error(error);
+//       res.status(500).json({ error: 'Failed to generate content' });
+//     }
+//   };
 exports.postorder=(req,res,next)=>{
     const products=req.user.cart.items;
         const data=[];
@@ -123,24 +153,6 @@ exports.postorder=(req,res,next)=>{
 
         })
         .catch(err=>console.log(err))
-    // .then(cart=>{
-    //     fetchedCart=cart;
-    //     return cart.getProducts();
-    // })
-    // .then(products=>{
-    // return req.user
-    //     .createOrder()
-    //     .then(order=>{
-    //     return order.addProducts(products.map(product=>{
-    //     product.orderItem={quantity: product.cartItem.quantity};
-    //     return product;
-    //     }))})
-    //     .catch(err=>{
-    //     console.log(err)});
-    // })
-    // .then(result=>{
-    //     return fetchedCart.setProducts(null);
-    // })
 }
 
 exports.getOrders=(req,res,next)=>{
@@ -161,28 +173,6 @@ exports.getOrders=(req,res,next)=>{
         })
 }
 exports.getcart=(req,res,next)=>{
-    // Cart.getcart(cart=>{
-    //     Product.fetchAll(products =>{
-    //         const cartproducts=[];
-    //         for(product of products)
-    //         {
-    //             const cartproductdata=cart.products.find(prod=> prod.id===product.id);
-    //             if(cartproductdata)
-    //             {
-    //                 cartproducts.push({productdata:product, qty:cartproductdata.qty});
-    //             }
-    //         }
-    //         res.render('shop/cart',{
-    //             path:'/cart',
-    //             doctitle:'your cart',
-    //             products: cartproducts
-    //         })
-    //     })
-    // })
-    // req.user.populate('cart.items.productId')
-    // // .execPopulate()//populate does not return a promiseb
-    // .then(user=>{
-    //     console.log(user);
         const products=req.user.cart.items;
         const data=[];
         Promise.all(products.map(product => {
@@ -195,7 +185,6 @@ exports.getcart=(req,res,next)=>{
                     console.log(err);
                 });
         })).then(() => {
-            // Now that all data is fetched, render the page
             res.render('shop/cart', {
                 path: '/cart',
                 doctitle: 'your cart',
@@ -203,29 +192,7 @@ exports.getcart=(req,res,next)=>{
                 isAuthenticated: req.session.isLoggedIn
             });
         });
-    //     for(let product of products)
-    //     {const prodId=product.productId;
-    //         axios.get('https://www.googleapis.com/books/v1/volumes/'+prodId+'?key=AIzaSyBnYQWPPX_n381uO10ZXqfmy_yEksReI48')
-    // .then(result=> {
-        
-    //      console.log(result.data);
-    //      console.log(product.quantity);
-    //         data.push({bookdata:result.data,quantity:product.quantity});
-    //     })
-    //     .catch(err=>{
-    //         console.log(err);
-    //     })        
-    // }
-    // res.render('shop/cart',{
-    //     path: '/cart',
-    //     doctitle: 'your cart',
-    //     products:data,
-    //     isAuthenticated:req.session.isLoggedIn
-    
-    // });
-// }
-// )
-//     .catch(err=>console.log(err));
+   
 }
 
 exports.postcart=(req,res,next)=>{
@@ -241,34 +208,7 @@ exports.postcart=(req,res,next)=>{
     .catch(err=>{
         console.log(err);
     });
-    // req.user.getCart()
-    // .then(cart=>{
-    //     fetchedCart=cart;
-    //     return cart.getProducts({where:{id:prodId}});
-    // })
-    // .then(products=>{
-    //     let product;
-    //     if(products.length>0)
-    //     {
-    //         product=products[0];
-    //     }
-    //     if(product){
-    //         const oldQuantity= product.cartItem.quantity;
-    //         newQuantity=oldQuantity+1;
-    //         return product;
-    //     }
-
-    //     return Product.findByPk(prodId);
-    // })
-    //     .then(product=>{
-    //         return fetchedCart.addProduct(product,{
-    //             through: {quantity: newQuantity}
-    //         });
-    // })
-    // .then(()=>{
-    //     res.redirect('/cart');
-    // })
-    // .catch(err=>console.log(err));
+    
 }
 
 exports.postcartdeleteproduct=(req,res,next)=>{
@@ -285,42 +225,39 @@ exports.postcartdeleteproduct=(req,res,next)=>{
 }
 exports.getcheckout=(req,res,next)=>{
    
-    const products=req.user.checkout.items;
-        const data=[];
-        Promise.all(products.map(product => {
-            const prodId = product.productId;
-            return axios.get('https://www.googleapis.com/books/v1/volumes/' + prodId + '?key=AIzaSyBnYQWPPX_n381uO10ZXqfmy_yEksReI48')
-                .then(result => {
-                    data.push( result.data);
-                })
-                .catch(err => {
-                    console.log(err);
-                });
-        })).then(() => {
-            // Now that all data is fetched, render the page
-            res.render('shop/checkout', {
-                path: '/checkout',
-                doctitle: 'your checkout',
-                prods: data,
-                isAuthenticated: req.session.isLoggedIn
-            });
-        });
+    axios.get('https://www.googleapis.com/books/v1/volumes?q=flowers&filter=free-ebooks&orderBy=newest&key=AIzaSyBnYQWPPX_n381uO10ZXqfmy_yEksReI48')
+    .then(result=> {
+        const books=result.data.items;
+        const allPagesBooks = books.filter(book => book.accessInfo.viewability === 'ALL_PAGES');
+        console.log(allPagesBooks);
+        res.render('shop/ebooks',{
+            prods:allPagesBooks,
+            doctitle:'ebooks',
+            path:'/checkout',
+            isAuthenticated:req.session.isLoggedIn        
+        })
+       
+})
+.catch(err=>console.log(err))
     
 }
 
 exports.postcheckout=(req,res,next)=>{
-    const prodId=req.body.productId;
-    
-    
-    
-    req.user.addToCheckout(prodId)
-    .then(result=>{
-        res.redirect('/checkout');
+    const search=req.body.bookName;
+   console.log(search);
+    axios.get('https://www.googleapis.com/books/v1/volumes?q='+search+'&filter=free-ebooks&orderBy=newest'+'&key=AIzaSyBnYQWPPX_n381uO10ZXqfmy_yEksReI48')
+    .then(result=> {
+        const books=result.data.items;
+        console.log(books);
+        return res.render('shop/ebooks',{
+            prods:books,
+            doctitle:'ebooks',
+            path:'/checkout',
+            isAuthenticated:req.session.isLoggedIn,
+        })
 
     })
-    .catch(err=>{
-        console.log(err);
-    });
+    .catch(err=>console.log(err))
     
 }
 
@@ -336,9 +273,4 @@ exports.postcheckoutdeleteproduct=(req,res,next)=>{
     
    
 }
-// exports.getcheckout=(req,res,next)=>{
-//     res.render('shop/checkout',{doctitle: 'your checkout',path:'/checkout', isAuthenticated:req.session.isLoggedIn});
-    
-//     // res.sendFile(path.join(rootdir,'views','shop.html'));
-// }
 

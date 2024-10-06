@@ -4,7 +4,7 @@
 
 
     <main>
-        
+       
         <h1 class="sec">FICTION</h1>
             <div class="wrapper">
                 <% for(let products of prods1) {%>
@@ -13,7 +13,7 @@
                           <div class="card"><img class="card__img" src="http://books.google.com/books/content?id=<%=products.id%>&printsec=frontcover&img=1&zoom=6&edge=curl&source=gbs_api" alt="<%= products.volumeInfo.title %>" >
                             <div class="card__content">
                               <h1 class="card__header"><%=products.volumeInfo.title%></h1>
-                              <p class="card__text"><%=products.volumeInfo.description%></p>
+                              <p class="card__text"><%=products.volumeInfo.description%> </p>
                               <a href="/products/<%= products.id %>"><button class="card__btn">Explore</button></a>
                             </div>
                           </div>

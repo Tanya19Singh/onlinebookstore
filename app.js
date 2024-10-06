@@ -12,29 +12,22 @@ const multer=require('multer');
 const MONGODB_URI='mongodb+srv://ts12191234:Tanscloud@cluster0.m9h5wp3.mongodb.net/shop';
 
 const app=express(); 
-const store=new MongoDbStore({//using mongodb for storing sessions...nt enough memory
+const store=new MongoDbStore({
     uri: MONGODB_URI,
     collection:'sessions'
 })
-// app.engine('hbs',expresshbs({layoutDir: 'views/layouts/', defaultLayout: 'main-layout',extname:'hbs'}));//registers the new templating engine
 const errorcontroller=require('./controllers/error');
 const User=require('./models/user');
 const Product=require('./models/product');
 
-const csrfProtection=csrf();//for protecting your session from being used by any other fake site 
+const csrfProtection=csrf();
 
 app.set('view engine','ejs');
-app.set('views','views');//here template folder name is views only so no need of it but in case if its something else then need to be specified like this
+app.set('views','views');
 
 const adminroutes=require('./routes/admin');
 const shoproutes=require('./routes/shop');
 const authRoutes=require('./routes/auth');
-
-// db.execute('SELECT * FROM products').then((result)=>{
-// console.log(result);
-// }).catch((err)=>{
-// console.log(err);
-// });//on every execution of a querry, a promise is sent n promise has two fuctions then() and catch()
 const fileStorage=multer.diskStorage({
   destination:function(req,file,cb){
     cb(null,'images');
@@ -84,7 +77,6 @@ app.use(authRoutes);
 
 
 app.use(errorcontroller.get404);
-// mongodb+srv://ts12191234:<password>@cluster0.m9h5wp3.mongodb.net/
 mongoose.connect('mongodb+srv://ts12191234:Tanscloud@cluster0.m9h5wp3.mongodb.net/shop')
  .then(result=>{
     console.log('connected');

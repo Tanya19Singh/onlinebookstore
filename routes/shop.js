@@ -18,6 +18,7 @@ router.post('/cart-delete-item',shopcontroller.postcartdeleteproduct);
 router.get('/checkout',isAuth,shopcontroller.getcheckout);
 router.post('/checkout',shopcontroller.postcheckout);
 router.post('/checkout-delete-item',shopcontroller.postcheckoutdeleteproduct);
+// router.post('/recommender',shopcontroller.postrecommender);
 
 
 module.exports=router;

@@ -46,7 +46,7 @@ const fileFilter=(req,file,cb)=>{
   }
 };
 app.use(bodyparser.urlencoded({extended: false}));
-app.use(multer({storage:fileStorage, fileFilter:fileFilter}).single('image'));
+app.use(multer({storage:fileStorage, fileFilter:fileFilter}).single('image'));//multer is a middleware used for uplloading files in nodejs app
 app.use(express.static(path.join(__dirname,'public')));//requied in order to link css file to html files as direct access does not work in express...here it grants read access  to public folder so  user can access public path
 app.use('/images', express.static(path.join(__dirname,'images')));
 app.use(session({secret:'my secret',resave:false, saveUninitialized:false,store: store}));//session middleware...automatically sets the  cookie

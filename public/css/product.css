@@ -20,6 +20,7 @@
 outline-color: rgb(238, 241, 169);
 }
 .btn{
+  height: fit-content;
     padding: 0.2rem 2rem;
     font:inherit;
     border:1px solid rgb(98, 0, 255);
@@ -167,7 +168,7 @@ align-items: center;
 
 @media (max-width: 60em) {
   body {
-    padding: 3rem;
+    padding: 0rem;
   }
 }
 
@@ -223,7 +224,7 @@ align-items: center;
 
 .card__img {
   display: block;
-  width: 100%;
+  width: 50%;
   height: 18rem;
   object-fit: contain  ;
 }
@@ -240,6 +241,9 @@ align-items: center;
   /* margin-bottom: 1rem; */
 }
 .card__text {
+  max-height: 150px; /* Limit the height */
+    overflow-y: auto; /* Add vertical scrolling */
+    padding-right: 5px; /* Add padding to account for the scrollbar */
   font-size: 0.5rem;
   color: #3c3c3c;
 }

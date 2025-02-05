@@ -11,7 +11,7 @@ exports.getproducts=async(req,res,next)=>{
     
   const res1=await axios.get('https://www.googleapis.com/books/v1/volumes?q=subject:fiction&orderBy=newest&key=AIzaSyBnYQWPPX_n381uO10ZXqfmy_yEksReI48');
   const res2=await axios.get('https://www.googleapis.com/books/v1/volumes?q=subject:geopolitics&orderBy=newest&key=AIzaSyBnYQWPPX_n381uO10ZXqfmy_yEksReI48');
-  const res3=await axios.get('https://www.googleapis.com/books/v1/volumes?q=subject:novel&orderBy=newest&orderBy=newest&key=AIzaSyBnYQWPPX_n381uO10ZXqfmy_yEksReI48');
+  const res3=await axios.get('https://www.googleapis.com/books/v1/volumes?q=subject:fantasy&orderBy=newest&orderBy=newest&key=AIzaSyBnYQWPPX_n381uO10ZXqfmy_yEksReI48');
   const res4=await axios.get('https://www.googleapis.com/books/v1/volumes?q=subject:poetry&orderBy=newest&key=AIzaSyBnYQWPPX_n381uO10ZXqfmy_yEksReI48');
   const prod1=res1.data.items;
   const prod2=res2.data.items;
@@ -83,10 +83,8 @@ exports.postindex=(req,res,next)=>{
             path:'/',
             isAuthenticated:req.session.isLoggedIn,
         })
-
     })
     .catch(err=>console.log(err))
-
 }
 
 // // In your Node.js file

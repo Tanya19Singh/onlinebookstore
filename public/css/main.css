@@ -64,7 +64,7 @@ main{
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    width: fit-content;
+    width: 30vw;
     height: 30vh;
    
 /* margin-right: 0; */
@@ -87,8 +87,8 @@ main{
 }
 .animation{
    padding: 2rem;
-    width: 50%;
-    height: 80%;
+    width:auto;
+    height: 82vh;
 }
 .animated{
     width:100%;
@@ -151,7 +151,9 @@ main{
 
 /*Resize the wrap to see the search bar change!*/
 .wrap{
-  margin: 1rem;
+  display: flex;
+    justify-content: space-around;
+  padding: 1rem;
  
 }
 
@@ -524,7 +526,8 @@ main{
 
     .ani_text,
     .animation {
-        width: 100%; /* Take full width */
+      height: 40vh;
+        width: auto; /* Take full width */
         text-align: center; /* Center text */
     }
 
@@ -567,7 +570,9 @@ main{
         text-align: center;
     }
     .animation{
-        width:100%;
+        width:auto;
+        height: 40vh;
+
     }
     .postcard{
         height: auto;

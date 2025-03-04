@@ -43,6 +43,9 @@ outline-color: rgb(238, 241, 169);
     display: block;
     margin: auto;
 }
+.product_form{
+  padding: 2rem;
+}
 .product-item img{
     width: 50vw;
     height: 70vh;

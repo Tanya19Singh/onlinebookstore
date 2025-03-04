@@ -1,4 +1,4 @@
-<header class="main-header">
+<!-- <header class="main-header">
     <nav class="main-header-nav">
         <ul class="main-header-item-list">
             <li class="main-header-item"><a class="<%= path === '/' ? 'active':''%>" href="/">Home</a></li>
@@ -29,4 +29,56 @@
         </ul>
 
     </nav>
-    </header>
+    </header> -->
+
+    <!-- c:\Users\LENOVO\Desktop\projects\nodetut\views\includes\navigation.ejs -->
+<header class="main-header">
+    <nav class="main-header-nav">
+        <div class="main-header-nav-left">
+             <!-- Hamburger icon for mobile -->
+            <div class="hamburger-menu">
+                <input id="menu__toggle" type="checkbox" />
+                <label class="menu__btn" for="menu__toggle">
+                    <span></span>
+                </label>
+                <ul class="main-header-item-list menu__box">
+                    <li class="main-header-item"><a class="<%= path === '/' ? 'active':''%>" href="/">Home</a></li>
+                    <li class="main-header-item"><a class="<%= path === '/products' ? 'active':''%>" href="/products">Books</a></li>
+                    <% if(isAuthenticated) {%>
+                    <li class="main-header-item"><a class="<%= path === '/orders' ? 'active':''%>" href="/orders">Orders</a></li>
+                    <li class="main-header-item"><a class="<%= path === '/cart' ? 'active':''%>" href="/cart">Cart</a></li>
+                    <li class="main-header-item"><a class="<%= path === '/checkout' ? 'active':''%>" href="/checkout">Free e-books</a></li>
+                    <li class="main-header-item"><a class="<%= path === '/add-product' ? 'active':''%>" href="/add-product">Add book</a></li>
+                    <li class="main-header-item"><a class="<%= path === '/admin-products' ? 'active':''%>" href="/admin-products">Admin books</a></li>
+                    <% }%>
+                </ul>
+            </div>
+             <ul class="main-header-item-list large-screen-only">
+                    <li class="main-header-item"><a class="<%= path === '/' ? 'active':''%>" href="/">Home</a></li>
+                    <li class="main-header-item"><a class="<%= path === '/products' ? 'active':''%>" href="/products">Books</a></li>
+                    <% if(isAuthenticated) {%>
+                    <li class="main-header-item"><a class="<%= path === '/orders' ? 'active':''%>" href="/orders">Orders</a></li>
+                    <li class="main-header-item"><a class="<%= path === '/cart' ? 'active':''%>" href="/cart">Cart</a></li>
+                    <li class="main-header-item"><a class="<%= path === '/checkout' ? 'active':''%>" href="/checkout">Free e-books</a></li>
+                    <li class="main-header-item"><a class="<%= path === '/add-product' ? 'active':''%>" href="/add-product">Add book</a></li>
+                    <li class="main-header-item"><a class="<%= path === '/admin-products' ? 'active':''%>" href="/admin-products">Admin books</a></li>
+                    <% }%>
+                </ul>
+        </div>
+       
+        <ul class="main-header-item-list">
+            <% if(!isAuthenticated) {%>
+            <li>
+                <button id="ten">Signup for more features</button></li>  
+            
+            <li class="main-header-item"><a class="<%= path === '/login' ? 'active':''%>" href="/login">login</a></li>
+            <li class="main-header-item"><a class="<%= path === '/signup' ? 'active':''%>" href="/signup">signup</a></li>
+            <% } else {%>
+                <form action="/logout" method="POST">
+                    <input type="hidden" name="_csrf"  value="<%= csrfToken %>">
+                    <button class="logoutbtn" type="submit">logout</button>
+                </form>
+            <% }%>
+        </ul>
+    </nav>
+</header>

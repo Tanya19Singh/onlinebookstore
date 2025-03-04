@@ -270,3 +270,78 @@ align-items: center;
 .card__btn:hover span, .card__btn:active span {
   margin-left: 1.5rem;
 }
+
+@media (max-width: 800px) {
+  .wrapper {
+      flex-direction: column; /* Stack cards vertically */
+      flex-wrap: nowrap; /* Prevent wrapping */
+      overflow-x: hidden; /* Hide horizontal overflow */
+      height: auto; /* Adjust height dynamically */
+  }
+   .card {
+      width: 90%; /* Make cards take up full width */
+      margin: 1rem auto;
+      flex-direction: column;
+      height:auto;
+      
+      /* Center cards */
+  }
+
+  .card_img,
+  .card_img img{
+      width: 100%;
+      height: auto;
+      max-height: 300px;
+  }
+  .card__img {
+      width: 100%;
+      height: auto;
+      max-height: 300px;
+  }
+
+  .in-item{
+       width: 100%;
+      margin: 1rem auto;
+  }
+
+  .grid,
+  .grid-in {
+      width: 100%;
+  }
+
+  .in-item{
+     width: 90%;
+  }
+  .card__content,
+  .card__actions {
+      width: 100%;
+  }
+
+  .product-item img {
+      width: 100%;
+  }
+
+  .card__text {
+       font-size: 1rem;
+  }
+  .card-header{
+    height: auto;
+}
+}
+
+@media (max-width: 480px) {
+  .product-item img {
+      width: 90%;
+  }
+   .card_img,
+  .card_img img {
+      max-height: 200px;
+  }
+
+  .card__img {
+      max-height: 200px;
+  }
+      .card__text {
+      font-size: 0.8rem;
+  }
+}
